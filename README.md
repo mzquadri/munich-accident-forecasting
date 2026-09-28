@@ -87,9 +87,9 @@ metrics, same number of held-out rows.
 | 2021-2022, as published | **0.153** | 0.200 | +23.4% | 7 of 7 |
 | 2018-2019, ordinary years | 0.166 | **0.143** | -15.5% | 3 of 7 |
 
-On an ordinary period the baseline wins. Repeating the same calendar month of last
-year beats the fitted trend by 15.5%, and the model is ahead on three of the seven
-series rather than all seven.
+On an ordinary period the advantage is gone. The point estimate has the baseline
+ahead by 15.5%, and the model is in front on three of the seven series rather than
+all seven.
 
 The published figure is not wrong and it is not a property of the method either.
 It is what happens when a trend fitted through a collapse is scored against a
@@ -100,8 +100,35 @@ the published window is reproduced by the same function that produces this one, 
 its macro figures match `results/reference_run.json` to 1e-9, which is what makes
 the second row trustworthy.
 
-Reproduce with `python -m accidents.robustness`. The run is pinned in
-`results/pandemic_free_run.json` and checked in CI alongside everything else.
+### Whether either margin survives 24 months
+
+Both rows above rest on 24 months of seven series, and a single number says nothing
+about whether it would hold on a different 24 months. A paired bootstrap answers
+that: every method is scored on the same resampled months, so what varies is the
+margin between them rather than the noise in each.
+
+It is run twice. Drawing months independently assumes they carry no memory, which
+for monthly accident counts is false and makes the interval too narrow. Drawing
+runs of three consecutive months keeps short-range dependence inside each run.
+Neither is right alone; where they disagree, believe the wider one.
+
+| Held out | Margin | Months drawn independently | Drawn in blocks of three |
+| --- | --- | --- | --- |
+| 2021-2022, as published | +23.4% | [+10.8%, +35.0%] | [+7.2%, +33.3%] |
+| 2018-2019, ordinary years | -15.5% | [-39.7%, +4.3%] | [-36.8%, +6.9%] |
+
+The published margin clears zero on both. The earlier one does not: its interval
+spans zero either way, so on 24 months the baseline's apparent 15.5% lead cannot be
+told apart from no difference at all.
+
+That sharpens the finding rather than weakening it. What this repository can defend
+is not that the baseline wins on an ordinary period. It is that the model's
+advantage is measurable on the published window and absent on an ordinary one, and
+that the gap between those two conclusions is the pandemic sitting in the baseline's
+memory.
+
+Reproduce with `python -m accidents.robustness` and `python -m accidents.uncertainty`.
+Both runs are pinned in `results/` and checked in CI alongside everything else.
 
 ![Held-out forecasts](docs/figures/03_forecast_vs_actual.png)
 

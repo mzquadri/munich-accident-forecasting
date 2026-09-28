@@ -38,6 +38,12 @@ jobs:
         # so it is recomputed here rather than trusted.
         run: python -m accidents.robustness --check
 
+      - name: The bootstrap intervals reproduce
+        # These decide which of the two margins the README may call a finding at
+        # all: the published one clears zero, the earlier one does not. The seed is
+        # fixed so that reading cannot drift between runs, and this proves it.
+        run: python -m accidents.uncertainty --check
+
       - name: README and docs still match the run
         run: python scripts/check_claims.py
 

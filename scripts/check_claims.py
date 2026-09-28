@@ -19,6 +19,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 RUN = ROOT / "results" / "reference_run.json"
 ROBUSTNESS = ROOT / "results" / "pandemic_free_run.json"
+UNCERTAINTY = ROOT / "results" / "uncertainty_run.json"
 
 #: Small counts are spelled out in the prose, so the checks have to accept that form.
 NUMBER_WORDS = {
@@ -151,13 +152,57 @@ def robustness_claims(readme: Path) -> list[tuple[str, Path, str]]:
     out.append((
         "prose margin matches the table",
         readme,
-        rf"beats the fitted trend by {loss:.1f}%",
+        rf"baseline ahead by {loss:.1f}%",
     ))
     out.append((
         "prose series count matches the table",
         readme,
-        rf"ahead on {NUMBER_WORDS[clean['series_where_the_model_wins']]} of the "
+        rf"in front on {NUMBER_WORDS[clean['series_where_the_model_wins']]} of the "
         rf"{NUMBER_WORDS[clean['series_total']]}\s+series",
+    ))
+    return out
+
+
+def uncertainty_claims(readme: Path) -> list[tuple[str, Path, str]]:
+    """The bootstrap intervals, and the sentence that reads them.
+
+    These are the numbers that decide whether the two margins may be described as
+    findings at all, so the README is not allowed to quote an interval the artifact
+    does not contain, nor to draw the opposite conclusion from the one the endpoints
+    support.
+    """
+    if not UNCERTAINTY.is_file():
+        return []
+
+    run = json.loads(UNCERTAINTY.read_text(encoding="utf-8"))
+    out: list[tuple[str, Path, str]] = []
+
+    for key, label in (("published", "2021-2022, as published"),
+                       ("pandemic_free", "2018-2019, ordinary years")):
+        window = run["windows"][key]
+        # Signed percentages carry a leading "+", which is a regex quantifier.
+        cells = [re.escape(f"{window['margin'] * 100:+.1f}%")]
+        for kind in ("iid_months", "moving_block"):
+            i = window[kind]
+            cells.append(re.escape(
+                f"[{i['low'] * 100:+.1f}%, {i['high'] * 100:+.1f}%]"))
+        out.append((
+            f"interval table row, {key}",
+            readme,
+            rf"\| {re.escape(label)} \| " + r" \| ".join(cells) + r" \|",
+        ))
+
+    pub = run["windows"]["published"]
+    free = run["windows"]["pandemic_free"]
+    # The reading only holds while the endpoints say what the prose says they say.
+    if not all(pub[k]["low"] > 0 for k in ("iid_months", "moving_block")):
+        raise SystemExit("the published interval no longer clears zero; rewrite the README")
+    if not all(free[k]["low"] < 0 < free[k]["high"] for k in ("iid_months", "moving_block")):
+        raise SystemExit("the earlier interval no longer spans zero; rewrite the README")
+    out.append((
+        "prose reads the intervals the way the endpoints allow",
+        readme,
+        r"published margin clears zero on both\. The earlier one does not",
     ))
     return out
 
@@ -165,6 +210,7 @@ def robustness_claims(readme: Path) -> list[tuple[str, Path, str]]:
 def main() -> int:
     run = load()
     claims = build(run)
+    claims += uncertainty_claims(ROOT / "README.md")
     cache: dict[Path, str] = {}
     failures = []
 

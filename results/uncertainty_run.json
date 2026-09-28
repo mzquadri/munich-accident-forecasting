@@ -1,0 +1,57 @@
+{
+  "environment": {
+    "generated_utc": "2026-09-28T13:47:54Z",
+    "python": "3.13.5"
+  },
+  "question": "Both margins are computed on 24 months. How much of each one is the model, and how much is which 24 months were held out?",
+  "method": "Paired bootstrap over test months, 10000 draws, seed 20260928. Every method is scored on the same resample. Reported twice: months drawn independently, and drawn in blocks of 3 consecutive months to allow for month-to-month dependence.",
+  "draws": 10000,
+  "seed": 20260928,
+  "windows": {
+    "published": {
+      "label": "published, 2021-2022",
+      "validation_years": [
+        2019,
+        2020
+      ],
+      "train_end_year": 2020,
+      "series": 7,
+      "test_months": 24,
+      "margin": 0.23441421222118747,
+      "iid_months": {
+        "low": 0.10786644063509171,
+        "high": 0.3497301198880891,
+        "share_above_zero": 0.9992
+      },
+      "moving_block": {
+        "low": 0.07205581812039169,
+        "high": 0.3330839403410771,
+        "share_above_zero": 0.997,
+        "block_months": 3
+      }
+    },
+    "pandemic_free": {
+      "label": "pandemic free, 2018-2019",
+      "validation_years": [
+        2016,
+        2017
+      ],
+      "train_end_year": 2017,
+      "series": 7,
+      "test_months": 24,
+      "margin": -0.1552610569581217,
+      "iid_months": {
+        "low": -0.3974500558946202,
+        "high": 0.04295928447055997,
+        "share_above_zero": 0.0649
+      },
+      "moving_block": {
+        "low": -0.3680355790406012,
+        "high": 0.0694184365810236,
+        "share_above_zero": 0.1016,
+        "block_months": 3
+      }
+    }
+  },
+  "finding": "The wider interval stays above zero, so the sign of this margin survives resampling. The wider interval spans zero, so this margin is not separable from nothing on 24 months."
+}
