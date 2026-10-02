@@ -19,7 +19,11 @@ That model is reproduced exactly in `docs/provenance.md` before anything was
 changed, so the criticism is measured rather than asserted. What follows is the
 rebuild.
 
-![The seven series](docs/figures/01_series.png)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/figures/01_series-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="docs/figures/01_series.png">
+  <img src="docs/figures/01_series.png" alt="The seven series, on a log scale, spanning a factor of 169">
+</picture>
 
 ## The data
 
@@ -52,7 +56,11 @@ years were left alone. `docs/evaluation.md` records every window that was tried.
 
 ## Results
 
-![Model against baselines](docs/figures/02_model_vs_baselines.png)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/figures/02_model_vs_baselines-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="docs/figures/02_model_vs_baselines.png">
+  <img src="docs/figures/02_model_vs_baselines.png" alt="The model against both baselines, scaled MAE per series and averaged">
+</picture>
 
 Held out: 2021 and 2022, 168 monthly observations, scored once. Errors are
 averaged across the seven series after scaling each by its own level, so the
@@ -130,7 +138,11 @@ memory.
 Reproduce with `python -m accidents.robustness` and `python -m accidents.uncertainty`.
 Both runs are pinned in `results/` and checked in CI alongside everything else.
 
-![Held-out forecasts](docs/figures/03_forecast_vs_actual.png)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/figures/03_forecast_vs_actual-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="docs/figures/03_forecast_vs_actual.png">
+  <img src="docs/figures/03_forecast_vs_actual.png" alt="Held-out forecasts against what actually happened, four of the seven series">
+</picture>
 
 ## Reproducing
 
