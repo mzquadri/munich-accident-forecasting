@@ -158,7 +158,7 @@ The first version of this project fitted one linear regression to every row of t
 city's export at once. That file holds seven different monthly series, three accident
 categories crossed with an accident type, and their averages range from
 21 to 3,512 accidents per month, a factor of 169. Fitting a single line through all
-seven, with only a year and a month as input, produced a model with an R² of 0.0009
+seven, with only a year and a month as input, produced a model with an R2 of 0.0009
 and a mean absolute error of 824 against a target averaging 780. The API it served
 accepted no way to say which series you wanted, and described its output as a number
 of deaths, which is not a quantity the dataset contains.
