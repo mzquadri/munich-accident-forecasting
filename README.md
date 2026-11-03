@@ -5,6 +5,16 @@
 
 # Munich road accident forecasting
 
+<!-- project-story:start -->
+<p align="center"><img src="docs/assets/architecture-animated.svg" alt="Animated architecture diagram of this project" width="100%"></p>
+
+| Problem | Why it mattered | Result |
+|---|---|---|
+| The baseline was forecasting a pandemic year. | A margin has to survive an ordinary period. | **+23.4% → −15.5%** the model's margin once the years are ordinary |
+
+[See it animated on mzquadri.de](https://mzquadri.de/work/munich-accident-forecasting)
+<!-- project-story:end -->
+
 Monthly forecasts for the seven road accident series Munich publishes, fitted one
 series at a time and served behind a small FastAPI service. It was written for the
 Digital Product School coding challenge, then rebuilt after the first model turned
